@@ -11,7 +11,7 @@ $engine->setModeValue(100000);
 $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
 $engine->setPosition(Engine::STARTPOS);
 
-$move = $engine->getMove('');
+$move = $engine->getMove('e2e4 d7d5');
 
 echo $move;
 
