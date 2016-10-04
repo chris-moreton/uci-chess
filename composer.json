@@ -4,7 +4,8 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/guzzle": "^5.1.0"
+        "guzzlehttp/guzzle": "^5.1.0",
+        "chris-moreton/chess.php": "dev-master"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0"
@@ -14,5 +15,11 @@
     },
     "autoload": {
         "psr-4": {"Netsensia\\Uci\\": "src/Netsensia/Uci/"}
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url" : "https://github.com/chris-moreton/chess.php.git"  
+        }
+    ]
 }

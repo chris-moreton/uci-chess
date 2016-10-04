@@ -11,7 +11,7 @@ class Engine
     const APPLICATION_TYPE_JAR = 1;
     const APPLICATION_TYPE_APP = 2;
     
-    const STARTPOS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    const STARTPOS = 'startpos';
     
     private $engineLocation;
     private $mode;
@@ -248,14 +248,6 @@ class Engine
         }
         
         $move = $parts[1];
-        
-        echo 'Move was ' . $move . PHP_EOL;
-        
-//         $this->sendCommands([
-//             'uci',
-//             ,
-//             'go ' . $goCommand,            
-//         ]);
         
         return $move;
     }

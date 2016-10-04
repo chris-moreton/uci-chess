@@ -4,8 +4,47 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "58000d8f9e4e46e335299733524cc3e9",
+    "content-hash": "7b6fe9cc452e0012d8f08dcf3c1e6139",
     "packages": [
+        {
+            "name": "chris-moreton/chess.php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chris-moreton/chess.php.git",
+                "reference": "f2442bb2e5d76d639ddffe229651f2c09229ebbd"
+            },
+            "require-dev": {
+                "johnkary/phpunit-speedtrap": "^1.0",
+                "phpunit/phpunit": "^5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ryanhs\\Chess\\": "src/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "./vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ryan hs",
+                    "email": "mr.ryansilalahi@gmail.com"
+                },
+                {
+                    "name": "Chris Moreton",
+                    "email": "chris@netsensia.com"
+                }
+            ],
+            "description": "chess.php is a PHP chess library that is used for chess move generation/validation, piece placement/movement, and check/checkmate/stalemate detection - basically everything but the AI. NOTE: this is a port of chess.js for php",
+            "time": "2016-10-04 16:17:39"
+        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "5.3.1",
@@ -1299,7 +1338,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "chris-moreton/chess.php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
