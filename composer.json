@@ -1,0 +1,18 @@
+{
+    "name": "chris-moreton/uci-tournament",
+    "description": "Wrappers to run UCI chess engines, matches and tournaments",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "^5.1.0"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-4": {"Netsensia\\Uci\\": "src/Netsensia/Uci/"}
+    }
+}
