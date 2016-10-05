@@ -4,7 +4,6 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/guzzle": "^5.1.0",
         "ryanhs/chess.php": "1.0.1"
     },
     "require-dev": {
