@@ -4,47 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b6fe9cc452e0012d8f08dcf3c1e6139",
+    "content-hash": "34d3f4afc146e27543685f3f228cfd81",
     "packages": [
-        {
-            "name": "chris-moreton/chess.php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/chris-moreton/chess.php.git",
-                "reference": "f2442bb2e5d76d639ddffe229651f2c09229ebbd"
-            },
-            "require-dev": {
-                "johnkary/phpunit-speedtrap": "^1.0",
-                "phpunit/phpunit": "^5.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Ryanhs\\Chess\\": "src/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "./vendor/bin/phpunit"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "ryan hs",
-                    "email": "mr.ryansilalahi@gmail.com"
-                },
-                {
-                    "name": "Chris Moreton",
-                    "email": "chris@netsensia.com"
-                }
-            ],
-            "description": "chess.php is a PHP chess library that is used for chess move generation/validation, piece placement/movement, and check/checkmate/stalemate detection - basically everything but the AI. NOTE: this is a port of chess.js for php",
-            "time": "2016-10-04 16:17:39"
-        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "5.3.1",
@@ -241,6 +202,42 @@
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
             "time": "2016-05-03 17:50:52"
+        },
+        {
+            "name": "ryanhs/chess.php",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ryanhs/chess.php.git",
+                "reference": "b60720cef8132ce6c4f4d98760888261caae8e78"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ryanhs/chess.php/zipball/b60720cef8132ce6c4f4d98760888261caae8e78",
+                "reference": "b60720cef8132ce6c4f4d98760888261caae8e78",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ryanhs\\Chess\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ryan hs",
+                    "email": "mr.ryansilalahi@gmail.com"
+                }
+            ],
+            "description": "chess.php is a PHP chess library that is used for chess move generation/validation, piece placement/movement, and check/checkmate/stalemate detection - basically everything but the AI. NOTE: this is a port of chess.js for php",
+            "time": "2016-05-22 14:39:06"
         }
     ],
     "packages-dev": [
@@ -1338,9 +1335,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "chris-moreton/chess.php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

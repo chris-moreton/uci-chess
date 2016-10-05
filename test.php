@@ -20,6 +20,10 @@ while (!$chess->gameOver()) {
     
     $move = $engine->getMove($moves);
     
+    if (!$engine->isEngineRunning()) {
+        echo 123; die;
+    }
+    
     $moveArray = [
         'from' => substr($move, 0, 2),
         'to' => substr($move, 2, 2),

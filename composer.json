@@ -5,7 +5,7 @@
     "require": {
         "php": ">=5.4.0",
         "guzzlehttp/guzzle": "^5.1.0",
-        "chris-moreton/chess.php": "dev-master"
+        "ryanhs/chess.php": "1.0.1"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0"
@@ -15,11 +15,5 @@
     },
     "autoload": {
         "psr-4": {"Netsensia\\Uci\\": "src/Netsensia/Uci/"}
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url" : "https://github.com/chris-moreton/chess.php.git"  
-        }
-    ]
+    }
 }

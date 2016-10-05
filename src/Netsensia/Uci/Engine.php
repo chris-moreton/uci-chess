@@ -26,6 +26,8 @@ class Engine
     private $errorLog = 'log/error.log';
     private $outputLog = 'log/output.log';
     
+    private $process;
+    
     /**
      * @return the $outputLog
      */
@@ -143,7 +145,7 @@ class Engine
      * 
      * @return The engine's process
      */
-    private function startEngine()
+    public function startEngine()
     {
         $descriptorspec = array(
             0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
@@ -159,13 +161,11 @@ class Engine
         
         $command .= $this->engineLocation;
         
-        $process = proc_open($command, $descriptorspec, $this->pipes);
+        $this->process = proc_open($command, $descriptorspec, $this->pipes);
         
         if (!is_resource($this->pipes[0])) {
             throw new \Exception('Could not start engine');
         }
-        
-        return $process;
     }
     
     /**
@@ -227,7 +227,10 @@ class Engine
      */
     public function getMove($moveList)
     {
-        $process = $this->startEngine();
+        if (!is_resource($this->pipes[0])) {
+            echo "Start..." . PHP_EOL;
+            $this->startEngine();
+        }
         
         switch ($this->mode) {
             case self::MODE_DEPTH : $goCommand = 'depth ' . $this->modeValue; break;
@@ -252,5 +255,14 @@ class Engine
         return $move;
     }
 
+    /**
+     * Is the engine running?
+     * 
+     * @return boolean
+     */
+    public function isEngineRunning()
+    {
+        return is_resource($this->pipes[0]);
+    }
 }
 
