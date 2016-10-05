@@ -30,13 +30,22 @@ while (!$chess->gameOver()) {
         'promotion' => strlen($move) > 4 ? substr($move, 4, 1) : null,
     ];
     
-    echo $move . PHP_EOL;
-    
     $chess->move($moveArray);
     $moves .= $move . ' ';
 }
 
-echo 'GAME OVER!';
+echo $chess->fen() . PHP_EOL;
+
+if ($chess->inDraw()) {
+    echo "Game drawn";
+} else {
+    if ($chess->turn() == Chess::WHITE) {
+        echo "Black wins";
+    } else {
+        echo "White wins";
+    }
+}
+
 echo PHP_EOL;
 
 
