@@ -2,48 +2,34 @@
 include 'vendor/autoload.php';
 
 use Netsensia\Uci\Engine;
-use Ryanhs\Chess\Chess;
+use Netsensia\Uci\Match;
 
-$engine = new Engine();
+$whiteEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+$blackEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
 
-$engine->setEngineLocation('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
-$engine->setMode(Engine::MODE_NODES);
-$engine->setModeValue(1000);
-$engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
-$engine->setPosition(Engine::STARTPOS);
+$whiteEngine->setMode(Engine::MODE_NODES);
+$whiteEngine->setModeValue(100);
+$whiteEngine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+$whiteEngine->setLogEngineOutput(false);
 
-$moves = '';
+$blackEngine->setMode(Engine::MODE_NODES);
+$blackEngine->setModeValue(10000);
+$blackEngine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+$blackEngine->setLogEngineOutput(false);
 
-$chess = new Chess();
+$match = new Match($whiteEngine, $blackEngine);
 
-while (!$chess->gameOver()) {
-    
-    $move = $engine->getMove($moves);
-    
-    if (!$engine->isEngineRunning()) {
-        echo 123; die;
-    }
-    
-    $moveArray = [
-        'from' => substr($move, 0, 2),
-        'to' => substr($move, 2, 2),
-        'promotion' => strlen($move) > 4 ? substr($move, 4, 1) : null,
-    ];
-    
-    $chess->move($moveArray);
-    $moves .= $move . ' ';
-}
+$result = $match->play();
 
-echo $chess->fen() . PHP_EOL;
+echo $result['fen'] . PHP_EOL;
 
-if ($chess->inDraw()) {
-    echo "Game drawn";
-} else {
-    if ($chess->turn() == Chess::WHITE) {
-        echo "Black wins";
-    } else {
-        echo "White wins";
-    }
+switch ($result['result']) {
+    case Match::DRAW: echo 'Draw';
+        break;
+    case Match::WHITE_WIN: echo 'White win';
+        break;
+    case Match::BLACK_WIN: echo 'Black win';
+        break;
 }
 
 echo PHP_EOL;

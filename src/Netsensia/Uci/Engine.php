@@ -17,6 +17,8 @@ class Engine
     private $mode;
     private $modeValue;
     
+    private $logEngineOutput = true;
+    
     private $pipes;
     
     private $position = self::STARTPOS;
@@ -27,6 +29,27 @@ class Engine
     private $outputLog = 'log/output.log';
     
     private $process;
+    
+    /**
+     * @return the $logEngineOutput
+     */
+    public function getLogEngineOutput()
+    {
+        return $this->logEngineOutput;
+    }
+
+    /**
+     * @param boolean $logEngineOutput
+     */
+    public function setLogEngineOutput($logEngineOutput)
+    {
+        $this->logEngineOutput = $logEngineOutput;
+    }
+
+    public function __construct($engineLocation)
+    {
+        $this->engineLocation = $engineLocation;    
+    }
     
     /**
      * @return the $outputLog
@@ -90,22 +113,6 @@ class Engine
     public function setPosition($position)
     {
         $this->position = $position;
-    }
-
-    /**
-     * @return the $engineLocation
-     */
-    public function getEngineLocation()
-    {
-        return $this->engineLocation;
-    }
-
-    /**
-     * @param field_type $engineLocation
-     */
-    public function setEngineLocation($engineLocation)
-    {
-        $this->engineLocation = $engineLocation;
     }
 
     /**
@@ -179,9 +186,20 @@ class Engine
             throw new \Exception('Engine has gone!');
         }
         
-        file_put_contents($this->outputLog, '>> ' . $command . PHP_EOL);
+        $this->log('>> ' . $command);
         
         fwrite($this->pipes[0], $command . PHP_EOL);
+    }
+    
+    /**
+     * 
+     * @param string $s
+     */
+    private function log($s)
+    {
+        if ($this->logEngineOutput) {
+            file_put_contents($this->outputLog, $s . PHP_EOL, FILE_APPEND);
+        }
     }
     
     /**
@@ -210,7 +228,7 @@ class Engine
         do {
             $output = trim(fgets($this->pipes[1]));
             if ($output != null) {
-                file_put_contents($this->outputLog, '<< ' . $output . PHP_EOL);
+                $this->log('<< ' . $output);
             }
         } while (strpos($output, $responseStart) !== 0);
         
@@ -228,7 +246,6 @@ class Engine
     public function getMove($moveList)
     {
         if (!is_resource($this->pipes[0])) {
-            echo "Start..." . PHP_EOL;
             $this->startEngine();
         }
         
