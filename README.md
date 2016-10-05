@@ -2,6 +2,21 @@
 
 PHP wrapper classes for interfacing with UCI chess engines. 
 
+## Getting started
+
+From the root of your application
+
+    composer require chris-moreton/uci-chess
+    
+Unless using a framework where autoloading is already taken care of, you'll need to
+
+    include 'vendor/autoload.php';
+    
+Then, include the classes that you want to use
+
+    use Netsensia\Uci\Engine;
+    use Netsensia\Uci\Match;
+    
 ## Search for a move
 
     $engine = new Engine();
