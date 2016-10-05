@@ -1,5 +1,5 @@
 {
-    "name": "chris-moreton/uci-tournament",
+    "name": "chris-moreton/uci-chess",
     "description": "Wrappers to run UCI chess engines, matches and tournaments",
     "license": "MIT",
     "require": {
