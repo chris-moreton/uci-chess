@@ -110,7 +110,9 @@ class Match
             throw new \Exception('Engine is not valid');
         }
         
-        while (!$chess->gameOver()) {
+        $moveCount = 0;
+        
+        while (!$chess->gameOver() && $moveCount < 500) {
 
             $engine = $this->mover == Chess::WHITE ? $this->white : $this->black;
             
@@ -119,7 +121,7 @@ class Match
             $moveArray = [
                 'from' => substr($move, 0, 2),
                 'to' => substr($move, 2, 2),
-                'promotion' => strlen($move) > 4 ? substr($move, 4, 1) : null,
+                'promotion' => strlen($move) > 4 ? strtolower(substr($move, 4, 1)) : null,
             ];
         
             $chess->move($moveArray);
@@ -129,13 +131,19 @@ class Match
             $moves .= $move . ' ';
             
             $this->switchMover();
+            $moveCount ++;
             
         }
         
         echo PHP_EOL;
         
-        $this->result = $chess->inDraw() ? self::DRAW : 
-                ($chess->turn() == Chess::WHITE ? self::BLACK_WIN : self::WHITE_WIN);
+        // Not detecting all threefold repititions for some reason, hacky fix.
+        if ($moveCount == 500) {
+            $this->result = self::DRAW;
+        } else { 
+            $this->result = $chess->inDraw() ? self::DRAW : 
+                    ($chess->turn() == Chess::WHITE ? self::BLACK_WIN : self::WHITE_WIN);
+        }
         
         return [
             'fen' => $this->fen,

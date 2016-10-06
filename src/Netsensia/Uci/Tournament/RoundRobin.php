@@ -14,12 +14,14 @@ class RoundRobin extends Tournament
      */ 
     public function showTable()
     {
-        foreach ($this->engines as &$engine) {
+        $engineList = $this->engines;
+        
+        foreach ($engineList as &$engine) {
             $win = 0;
             $loss = 0;
             $draw = 0;
             foreach ($engine['matches'] as $match) {
-                $name = $engine->getName();
+                $name = $engine['engine']->getName();
                 if ($match->getWhite()->getName() == $name) {
                     $engineSide = Chess::WHITE;
                 }
@@ -59,7 +61,7 @@ class RoundRobin extends Tournament
             }
         }
         
-        usort($this->engines, function($a, $b) {
+        usort($engineList, function($a, $b) {
             if ($a['score'] == $b['score']) {
                 return 0;
             }
@@ -76,7 +78,7 @@ class RoundRobin extends Tournament
         echo str_pad('', 40, '-');
         echo PHP_EOL;
         
-        foreach ($this->engines as $engine) {
+        foreach ($engineList as $engine) {
             
             echo str_pad($engine['engine']->getName(), 20);
             
@@ -111,7 +113,8 @@ class RoundRobin extends Tournament
                     $match = new Match($whiteEngine['engine'], $blackEngine['engine']);
                     $match->play();
                     
-                    $whiteEngine['matches'][] = $match;
+                    $this->engines[$whiteEngineIndex]['matches'][] = $match;
+                    $this->engines[$blackEngineIndex]['matches'][] = $match;
                     
                     $this->showTable();
                 }

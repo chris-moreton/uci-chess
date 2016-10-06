@@ -10,7 +10,7 @@ $engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/Riv
 $engine->setMode(Engine::MODE_NODES);
 $engine->setModeValue(100);
 $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
-$engine->setLogEngineOutput(false);
+$engine->setLogEngineOutput(true);
 $engine->setName('Rival 100');
 
 $tournament->addEngine($engine);
@@ -34,6 +34,3 @@ $tournament->showTable();
 $tournament->close();
 
 echo PHP_EOL;
-
-
-

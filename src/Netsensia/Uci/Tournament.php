@@ -29,7 +29,7 @@ abstract class Tournament
     public function close()
     {
         foreach ($this->engines as $engine) {
-            $engine->unloadEngine();
+            $engine['engine']->unloadEngine();
         }
     }
 }
