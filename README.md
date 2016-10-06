@@ -75,7 +75,7 @@ Then, include the classes that you want to use
 
 ## Run a tournament
 
-This is still a work in progress and is not working properly yet.
+This is still a work in progress and has limited functionality, but the below code will work
 
     $tournament = new RoundRobin();
     
