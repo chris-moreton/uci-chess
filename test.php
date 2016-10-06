@@ -2,35 +2,36 @@
 include 'vendor/autoload.php';
 
 use Netsensia\Uci\Engine;
-use Netsensia\Uci\Match;
+use Netsensia\Uci\Tournament\RoundRobin;
 
-$whiteEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
-$blackEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+$tournament = new RoundRobin();
 
-$whiteEngine->setMode(Engine::MODE_NODES);
-$whiteEngine->setModeValue(100);
-$whiteEngine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
-$whiteEngine->setLogEngineOutput(false);
+$engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+$engine->setMode(Engine::MODE_NODES);
+$engine->setModeValue(100);
+$engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+$engine->setLogEngineOutput(false);
+$engine->setName('Rival 100');
 
-$blackEngine->setMode(Engine::MODE_NODES);
-$blackEngine->setModeValue(10000);
-$blackEngine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
-$blackEngine->setLogEngineOutput(false);
+$tournament->addEngine($engine);
 
-$match = new Match($whiteEngine, $blackEngine);
+$engine = clone $engine;
+$engine->setModeValue(1000);
+$engine->setName('Rival 1000');
 
-$result = $match->play();
+$tournament->addEngine($engine);
 
-echo $result['fen'] . PHP_EOL;
+$engine = clone $engine;
+$engine->setModeValue(10000);
+$engine->setName('Rival 10000');
 
-switch ($result['result']) {
-    case Match::DRAW: echo 'Draw';
-        break;
-    case Match::WHITE_WIN: echo 'White win';
-        break;
-    case Match::BLACK_WIN: echo 'Black win';
-        break;
-}
+$tournament->addEngine($engine);
+
+$tournament->start();
+
+$tournament->showTable();
+
+$tournament->close();
 
 echo PHP_EOL;
 

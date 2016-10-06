@@ -19,8 +19,53 @@ class Match
      */
     private $black;
     
+    /**
+     * @var number
+     */
+    private $result = null;
+    
+    /**
+     * @var string
+     */
+    private $fen = null;
+    
+    /**
+     * @var number
+     */
     private $mover = Chess::WHITE;
     
+    /**
+     * @return the $white
+     */
+    public function getWhite()
+    {
+        return $this->white;
+    }
+
+    /**
+     * @return the $black
+     */
+    public function getBlack()
+    {
+        return $this->black;
+    }
+
+    /**
+     * @param \Netsensia\Uci\Engine $white
+     */
+    public function setWhite($white)
+    {
+        $this->white = $white;
+    }
+
+    /**
+     * @param \Netsensia\Uci\Engine $black
+     */
+    public function setBlack($black)
+    {
+        $this->black = $black;
+    }
+
     public function __construct(Engine $white, Engine $black)
     {
         $this->white = $white;
@@ -61,6 +106,10 @@ class Match
         $this->setEngineParams($this->white);
         $this->setEngineParams($this->black);
         
+        if (!$this->white instanceof Engine) {
+            throw new \Exception('Engine is not valid');
+        }
+        
         while (!$chess->gameOver()) {
 
             $engine = $this->mover == Chess::WHITE ? $this->white : $this->black;
@@ -74,17 +123,40 @@ class Match
             ];
         
             $chess->move($moveArray);
+            
+            $this->fen = $chess->fen();
+            
             $moves .= $move . ' ';
             
             $this->switchMover();
+            
         }
         
+        echo PHP_EOL;
+        
+        $this->result = $chess->inDraw() ? self::DRAW : 
+                ($chess->turn() == Chess::WHITE ? self::BLACK_WIN : self::WHITE_WIN);
+        
         return [
-            'fen' => $chess->fen(),
-            'result' => 
-                $chess->inDraw() ? self::DRAW : 
-                ($chess->turn() == Chess::WHITE ? self::BLACK_WIN : self::WHITE_WIN),
+            'fen' => $this->fen,
+            'result' => $this->result,
         ];
+    }
+    
+    /**
+     * @return the $result - null if game is not over
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+    
+    /**
+     * @return the $fen
+     */
+    public function getFen()
+    {
+        return $this->fen;
     }
     
 }

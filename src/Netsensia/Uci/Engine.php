@@ -17,6 +17,8 @@ class Engine
     private $mode;
     private $modeValue;
     
+    private $name;
+    
     private $logEngineOutput = true;
     
     private $pipes;
@@ -30,6 +32,22 @@ class Engine
     
     private $process;
     
+    /**
+     * @return the $name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param field_type $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     /**
      * @return the $logEngineOutput
      */
@@ -176,6 +194,14 @@ class Engine
     }
     
     /**
+     * Stop the engine process
+     */
+    public function unloadEngine()
+    {
+        proc_close($this->process);
+    }
+    
+    /**
      * Send a command to the engine
      * 
      * @param string $command
@@ -280,6 +306,14 @@ class Engine
     public function isEngineRunning()
     {
         return is_resource($this->pipes[0]);
+    }
+    
+    /**
+     * Destructor
+     */
+    function __destruct()
+    {
+        $this->unloadEngine();
     }
 }
 

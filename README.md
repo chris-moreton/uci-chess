@@ -37,6 +37,9 @@ Then, include the classes that you want to use
     // Send the move history and get the move
     $move = $engine->getMove('e2e4 d7d5');
     
+    // Important! - remove the process
+    $engine->unloadEngine();
+    
 ## Run a match
 
     $whiteEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
@@ -66,4 +69,41 @@ Then, include the classes that you want to use
         case Match::BLACK_WIN: echo 'Black win';
             break;
     }
+    
+    $whiteEngine->unloadEngine();
+    $blackEngine->unloadEngine();
 
+## Run a tournament
+
+This is still a work in progress and is not working properly yet.
+
+    $tournament = new RoundRobin();
+    
+    $engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+    $engine->setMode(Engine::MODE_NODES);
+    $engine->setModeValue(100);
+    $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+    $engine->setLogEngineOutput(false);
+    $engine->setName('Rival 100');
+    
+    $tournament->addEngine($engine);
+    
+    $engine = clone $engine;
+    $engine->setModeValue(1000);
+    $engine->setName('Rival 1000');
+    
+    $tournament->addEngine($engine);
+    
+    $engine = clone $engine;
+    $engine->setModeValue(10000);
+    $engine->setName('Rival 10000');
+    
+    $tournament->addEngine($engine);
+    
+    $tournament->start();
+    
+    $tournament->showTable();
+    
+    // Important! - Unload the engine processes
+    $tournament->close();
+    
