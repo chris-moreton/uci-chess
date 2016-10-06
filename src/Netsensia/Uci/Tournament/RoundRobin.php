@@ -16,12 +16,14 @@ class RoundRobin extends Tournament
     {
         $engineList = $this->engines;
         
-        foreach ($engineList as &$engine) {
+        for ($i=0; $i<count($engineList); $i++) {
+            
             $win = 0;
             $loss = 0;
             $draw = 0;
-            foreach ($engine['matches'] as $match) {
-                $name = $engine['engine']->getName();
+            foreach ($engineList[$i]['matches'] as $match) {
+                
+                $name = $engineList[$i]['engine']->getName();
                 if ($match->getWhite()->getName() == $name) {
                     $engineSide = Chess::WHITE;
                 }
@@ -51,16 +53,17 @@ class RoundRobin extends Tournament
                         break;
                 }
                 
-                $engine['results'] = [
+                $engineList[$i]['results'] = [
                     'win' => $win,
                     'loss' => $loss,
                     'draw' => $draw,
                 ];
                 
-                $engine['score'] = $win + ($draw / 2);
+                $engineList[$i]['score'] = $win + ($draw / 2);
+
             }
         }
-        
+
         usort($engineList, function($a, $b) {
             if ($a['score'] == $b['score']) {
                 return 0;
@@ -68,7 +71,7 @@ class RoundRobin extends Tournament
             
             return $a['score'] > $b['score'] ? -1 : 1;
         });
-        
+
         echo str_pad('Engine', 20);
         echo str_pad('W', 5);
         echo str_pad('L', 5);
@@ -78,14 +81,14 @@ class RoundRobin extends Tournament
         echo str_pad('', 40, '-');
         echo PHP_EOL;
         
-        foreach ($engineList as $engine) {
+        foreach ($engineList as $e) {
             
-            echo str_pad($engine['engine']->getName(), 20);
+            echo str_pad($e['engine']->getName(), 20);
             
-            echo str_pad($engine['results']['win'], 5);
-            echo str_pad($engine['results']['loss'], 5);
-            echo str_pad($engine['results']['draw'], 5);
-            echo str_pad($engine['score'], 10);
+            echo str_pad($e['results']['win'], 5);
+            echo str_pad($e['results']['loss'], 5);
+            echo str_pad($e['results']['draw'], 5);
+            echo str_pad($e['score'], 10);
             
             echo PHP_EOL;
         }

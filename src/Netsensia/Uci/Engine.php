@@ -198,7 +198,18 @@ class Engine
      */
     public function unloadEngine()
     {
-        proc_close($this->process);
+        if (is_resource($this->process)) {
+            
+            $this->sendCommand('quit');
+            
+            for ($i=0; $i<2; $i++) {
+                if (is_resource($this->pipes[$i])) {
+                    fclose($this->pipes[$i]);
+                }
+            }
+            
+            proc_close($this->process);
+        }
     }
     
     /**

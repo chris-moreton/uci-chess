@@ -135,6 +135,9 @@ class Match
             
         }
         
+        $this->white->unloadEngine();
+        $this->black->unloadEngine();
+        
         echo PHP_EOL;
         
         // Not detecting all threefold repititions for some reason, hacky fix.
