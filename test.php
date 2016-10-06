@@ -4,28 +4,21 @@ include 'vendor/autoload.php';
 use Netsensia\Uci\Engine;
 use Netsensia\Uci\Tournament\RoundRobin;
 
+$engineNodes = [100, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 5000000];
+
 $tournament = new RoundRobin();
 
 $engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
 $engine->setMode(Engine::MODE_NODES);
-$engine->setModeValue(100);
 $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
 $engine->setLogEngineOutput(true);
-$engine->setName('Rival 100');
 
-$tournament->addEngine($engine);
-
-$engine = clone $engine;
-$engine->setModeValue(1000);
-$engine->setName('Rival 1000');
-
-$tournament->addEngine($engine);
-
-$engine = clone $engine;
-$engine->setModeValue(10000);
-$engine->setName('Rival 10000');
-
-$tournament->addEngine($engine);
+foreach ($engineNodes as $nodes) {
+    $engine->setModeValue($nodes);
+    $engine->setName('Rival ' . $nodes);
+    $tournament->addEngine($engine);
+    $engine = clone $engine;
+}
 
 $tournament->start();
 
