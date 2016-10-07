@@ -6,6 +6,7 @@ use Ryanhs\Chess\Chess;
 use Netsensia\Uci\Tournament;
 use Netsensia\Uci\Match;
 use Netsensia\Tournament\RoundRobin\Schedule;
+use Zelenin\Elo\Player;
 
 class RoundRobin extends Tournament
 { 
@@ -74,17 +75,19 @@ class RoundRobin extends Tournament
         });
 
         echo str_pad('Engine', 20);
+        echo str_pad('ELO', 6);
         echo str_pad('W', 5);
         echo str_pad('L', 5);
         echo str_pad('D', 5);
         echo str_pad('Score', 10);
         echo PHP_EOL;
-        echo str_pad('', 40, '-');
+        echo str_pad('', 47, '-');
         echo PHP_EOL;
         
         foreach ($engineList as $e) {
             
             echo str_pad($e['engine']->getName(), 20);
+            echo str_pad(floor($e['engine']->getElo()), 6);
             
             echo str_pad($e['results']['win'], 5);
             echo str_pad($e['results']['loss'], 5);
@@ -122,6 +125,21 @@ class RoundRobin extends Tournament
                 
                 $match = new Match($whiteEngine['engine'], $blackEngine['engine']);
                 $match->play();
+                
+                $result = $match->getResult();
+                
+                $eloWhite = new Player($whiteEngine['engine']->getElo());
+                $eloBlack = new Player($blackEngine['engine']->getElo());
+                $eloMatch = new \Zelenin\Elo\Match($eloWhite, $eloBlack);
+                
+                if ($result == Match::DRAW) {
+                    $eloMatch->setScore(0.5, 0.5)->setK(32)->count();
+                } else {
+                    $eloMatch->setScore($result == Match::WHITE_WIN ? 1 : 0, $result == Match::BLACK_WIN ? 1 : 0)->setK(32)->count();
+                }
+                
+                $whiteEngine['engine']->setElo($eloMatch->getPlayer1()->getRating());
+                $blackEngine['engine']->setElo($eloMatch->getPlayer2()->getRating());
                 
                 $this->engines[$whiteIndex]['matches'][] = $match;
                 $this->engines[$blackIndex]['matches'][] = $match;

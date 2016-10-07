@@ -32,6 +32,24 @@ class Engine
     
     private $process;
     
+    private $elo = 1600;
+    
+    /**
+     * @return the $elo
+     */
+    public function getElo()
+    {
+        return $this->elo;
+    }
+
+    /**
+     * @param field_type $elo
+     */
+    public function setElo($elo)
+    {
+        $this->elo = $elo;
+    }
+
     /**
      * @return the $name
      */
