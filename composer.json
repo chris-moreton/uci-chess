@@ -4,7 +4,8 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
-        "ryanhs/chess.php": "1.0.2"
+        "ryanhs/chess.php": "1.0.2",
+        "chris-moreton/tournament-utils": "1.0.1"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0"

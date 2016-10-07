@@ -4,7 +4,7 @@ include 'vendor/autoload.php';
 use Netsensia\Uci\Engine;
 use Netsensia\Uci\Tournament\RoundRobin;
 
-$engineNodes = [100, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 5000000];
+$engineNodes = [100, 1000, 2000];
 
 $tournament = new RoundRobin();
 

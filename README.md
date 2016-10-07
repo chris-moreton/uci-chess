@@ -12,24 +12,26 @@ Unless using a framework where autoloading is already taken care of, you'll need
 
     include 'vendor/autoload.php';
     
-Then, include the classes that you want to use
+Then, include the classes that you want to use, e.g.
 
     use Netsensia\Uci\Engine;
     use Netsensia\Uci\Match;
+    use Netsensia\Uci\Tournament\RoundRobin;
     
 ## Search for a move
 
     $engine = new Engine();
-    
+
+    // Native application or Jar file?
+    $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+        
     // The location of the chess engine on the local file system
-    $engine->setEngineLocation('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+    // You can download my engine, RivalChess from https://github.com/chris-moreton/rival-chess-android-engine/tree/master/dist
+    $engine->setEngineLocation('/path/to/engine.jar');
     
     // Set engine parameters
     $engine->setMode(Engine::MODE_NODES);
     $engine->setModeValue(100000);
-    
-    // Native application or Jar file?
-    $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     
     // Set the starting position of the match (before any moves have been played)
     $engine->setPosition(Engine::STARTPOS);
@@ -42,8 +44,10 @@ Then, include the classes that you want to use
     
 ## Run a match
 
-    $whiteEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
-    $blackEngine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+    $whiteEngine = new Engine('/path/to/engine1.jar');
+    
+    // No reason why you can't use the same engine if you want to test against different parameters
+    $blackEngine = new Engine('/path/to/engine2.jar');
     
     $whiteEngine->setMode(Engine::MODE_NODES);
     $whiteEngine->setModeValue(100);

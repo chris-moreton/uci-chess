@@ -5,6 +5,7 @@ use Netsensia\Uci\Engine;
 use Ryanhs\Chess\Chess;
 use Netsensia\Uci\Tournament;
 use Netsensia\Uci\Match;
+use Netsensia\Tournament\RoundRobin\Schedule;
 
 class RoundRobin extends Tournament
 { 
@@ -103,25 +104,33 @@ class RoundRobin extends Tournament
      */
     public function start()
     {
-        $engineCount = count($this->engines);
-        
-        for ($whiteEngineIndex=0; $whiteEngineIndex<$engineCount; $whiteEngineIndex++) {
-            for ($blackEngineIndex=0; $blackEngineIndex<$engineCount; $blackEngineIndex++) {
+        $schedule = new Schedule(count($this->engines));
+
+        for ($i=0; $i<2; $i++) {
+            $schedule->reset();
+            $pairing = $schedule->getNextPairing();
+            while ($pairing !== null) {
                 
-                if ($whiteEngineIndex != $blackEngineIndex) {
-                    
-                    $whiteEngine = $this->engines[$whiteEngineIndex];
-                    $blackEngine = $this->engines[$blackEngineIndex];
-                    
-                    $match = new Match($whiteEngine['engine'], $blackEngine['engine']);
-                    $match->play();
-                    
-                    $this->engines[$whiteEngineIndex]['matches'][] = $match;
-                    $this->engines[$blackEngineIndex]['matches'][] = $match;
-                    
-                    $this->showTable();
-                }
+                // looks complex, but just assigns white and black depending on which iteration we are on
+                $whiteIndex = $pairing[$i % 2] - 1;
+                $blackIndex = $pairing[abs(($i % 2) - 1)] - 1;
+                
+                $whiteEngine = $this->engines[$whiteIndex];
+                $blackEngine = $this->engines[$blackIndex];
+                
+                echo $whiteEngine['engine']->getName() . ' v ' . $blackEngine['engine']->getName() . PHP_EOL;
+                
+                $match = new Match($whiteEngine['engine'], $blackEngine['engine']);
+                $match->play();
+                
+                $this->engines[$whiteIndex]['matches'][] = $match;
+                $this->engines[$blackIndex]['matches'][] = $match;
+                
+                $this->showTable();
+                
+                $pairing = $schedule->getNextPairing();
             }
         }
+        
     }
 }

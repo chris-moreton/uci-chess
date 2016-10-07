@@ -4,8 +4,42 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "45c560a48c2a77267f8ea8edfb2fe984",
+    "content-hash": "b6036e120075e553646b3f42b60d9215",
     "packages": [
+        {
+            "name": "chris-moreton/tournament-utils",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chris-moreton/tournament-utils.git",
+                "reference": "acd00294e85ff89e0153979ab7604fdaecfd2bec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chris-moreton/tournament-utils/zipball/acd00294e85ff89e0153979ab7604fdaecfd2bec",
+                "reference": "acd00294e85ff89e0153979ab7604fdaecfd2bec",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.0",
+                "phpunit/phpunit": "^5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Netsensia\\Tournament\\": "src/Netsensia/Tournament/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Utilities for managing tournaments, particularly engine v engine tournaments",
+            "time": "2016-10-07 15:28:39"
+        },
         {
             "name": "ryanhs/chess.php",
             "version": "v1.0.2",
