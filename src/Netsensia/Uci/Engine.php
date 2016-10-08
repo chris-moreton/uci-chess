@@ -318,8 +318,8 @@ class Engine
         $response = $this->waitFor('bestmove');
         $parts = explode(' ', $response);
         
-        if (count($parts) != 2) {
-            throw new \Exception('Move format was not correct');
+        if (count($parts) < 2) {
+            throw new \Exception('Move format was not correct: ' . print_r($response, true));
         }
         
         $move = $parts[1];

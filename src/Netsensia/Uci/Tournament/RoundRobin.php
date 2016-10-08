@@ -138,8 +138,12 @@ class RoundRobin extends Tournament
                     $eloMatch->setScore($result == Match::WHITE_WIN ? 1 : 0, $result == Match::BLACK_WIN ? 1 : 0)->setK(32)->count();
                 }
                 
-                $whiteEngine['engine']->setElo($eloMatch->getPlayer1()->getRating());
-                $blackEngine['engine']->setElo($eloMatch->getPlayer2()->getRating());
+                if ($whiteEngine['engine']->getName() != 'Cuckoo') {
+                    $whiteEngine['engine']->setElo($eloMatch->getPlayer1()->getRating());
+                }
+                if ($blackEngine['engine']->getName() != 'Cuckoo') {
+                    $blackEngine['engine']->setElo($eloMatch->getPlayer2()->getRating());
+                }
                 
                 $this->engines[$whiteIndex]['matches'][] = $match;
                 $this->engines[$blackIndex]['matches'][] = $match;

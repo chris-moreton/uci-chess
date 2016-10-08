@@ -27,7 +27,8 @@ Then, include the classes that you want to use, e.g.
         
     // The location of the chess engine on the local file system
     // You can download my engine, RivalChess from https://github.com/chris-moreton/rival-chess-android-engine/tree/master/dist
-    $engine->setEngineLocation('/path/to/engine.jar');
+    // If the engine requires any parameters, simply add them after the path
+    $engine->setEngineLocation('/path/to/engine.jar [params]');
     
     // Set engine parameters
     $engine->setMode(Engine::MODE_NODES);
