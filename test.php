@@ -8,7 +8,7 @@ $engineNodes = [50, 100, 150, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500,
 
 $tournament = new RoundRobin();
 
-$engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+$engine = new Engine('RivalChess.jar');
 $engine->setMode(Engine::MODE_NODES);
 $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
 $engine->setLogEngineOutput(false);
@@ -21,7 +21,7 @@ foreach ($engineNodes as $nodes) {
     $engine = clone $engine;
 }
 
-$engine = new Engine('/Users/Chris/git/chess/engines/cuckoo112.jar uci');
+$engine = new Engine('cuckoo112.jar uci');
 $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
 $engine->setMode(Engine::MODE_TIME_MILLIS);
 $engine->setModeValue(1500);
