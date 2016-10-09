@@ -6,6 +6,25 @@ use Netsensia\Uci\Engine;
 abstract class Tournament
 {
     protected $engines = [];
+    protected $output = true;
+
+    /**
+     * @return the $output
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * Should the tournament output info to the console?
+     * 
+     * @param boolean $output
+     */
+    public function setOutput($output)
+    {
+        $this->output = $output;
+    }
 
     abstract public function showTable();
     abstract public function start();

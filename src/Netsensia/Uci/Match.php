@@ -10,6 +10,11 @@ class Match
     const BLACK_WIN = 2;
     
     /**
+     * @var boolean
+     */
+    private $output = true;
+    
+    /**
      * @var Engine
      */
     private $white;
@@ -34,6 +39,22 @@ class Match
      */
     private $mover = Chess::WHITE;
     
+    /**
+     * @return the $output
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * @param boolean $output
+     */
+    public function setOutput($output)
+    {
+        $this->output = $output;
+    }
+
     /**
      * @return the $white
      */
@@ -117,6 +138,10 @@ class Match
             $engine = $this->mover == Chess::WHITE ? $this->white : $this->black;
             
             $move = $engine->getMove($moves);
+            
+            if ($this->output) {
+                echo $move . ' ';
+            }
         
             $moveArray = [
                 'from' => substr($move, 0, 2),
@@ -124,7 +149,14 @@ class Match
                 'promotion' => strlen($move) > 4 ? strtolower(substr($move, 4, 1)) : null,
             ];
         
-            $chess->move($moveArray);
+            if ($chess->move($moveArray) === null) {
+                $this->result = $this->mover == Chess::WHITE ? self::BLACK_WIN : self::WHITE_WIN;
+                return [
+                    'fen' => $this->fen,
+                    'result' => $this->result,
+                    'reason' => 'illegal-move',
+                ]; 
+            }
             
             $this->fen = $chess->fen();
             
@@ -133,6 +165,10 @@ class Match
             $this->switchMover();
             $moveCount ++;
             
+        }
+        
+        if ($this->output) {
+            echo PHP_EOL;
         }
         
         $this->white->unloadEngine();
@@ -151,6 +187,7 @@ class Match
         return [
             'fen' => $this->fen,
             'result' => $this->result,
+            'reason' => 'game-over',
         ];
     }
     

@@ -121,27 +121,31 @@ class RoundRobin extends Tournament
                 $whiteEngine = $this->engines[$whiteIndex];
                 $blackEngine = $this->engines[$blackIndex];
                 
-                echo $whiteEngine['engine']->getName() . ' v ' . $blackEngine['engine']->getName() . PHP_EOL;
+                if ($this->output) {
+                    echo $whiteEngine['engine']->getName() . ' v ' . $blackEngine['engine']->getName() . PHP_EOL;
+                }
                 
                 $match = new Match($whiteEngine['engine'], $blackEngine['engine']);
-                $match->play();
+                $result = $match->play();
                 
-                $result = $match->getResult();
+                if ($this->output) {
+                    echo $result['reason'] . PHP_EOL;
+                }
                 
                 $eloWhite = new Player($whiteEngine['engine']->getElo());
                 $eloBlack = new Player($blackEngine['engine']->getElo());
                 $eloMatch = new \Zelenin\Elo\Match($eloWhite, $eloBlack);
                 
-                if ($result == Match::DRAW) {
+                if ($result['result'] == Match::DRAW) {
                     $eloMatch->setScore(0.5, 0.5)->setK(32)->count();
                 } else {
-                    $eloMatch->setScore($result == Match::WHITE_WIN ? 1 : 0, $result == Match::BLACK_WIN ? 1 : 0)->setK(32)->count();
+                    $eloMatch->setScore($result['result'] == Match::WHITE_WIN ? 1 : 0, $result['result'] == Match::BLACK_WIN ? 1 : 0)->setK(32)->count();
                 }
                 
-                if ($whiteEngine['engine']->getName() != 'Cuckoo') {
+                if (strpos($whiteEngine['engine']->getName(), 'No Adjust') === false) {
                     $whiteEngine['engine']->setElo($eloMatch->getPlayer1()->getRating());
                 }
-                if ($blackEngine['engine']->getName() != 'Cuckoo') {
+                if (strpos($blackEngine['engine']->getName(), 'No Adjust') === false) {
                     $blackEngine['engine']->setElo($eloMatch->getPlayer2()->getRating());
                 }
                 
