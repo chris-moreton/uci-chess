@@ -209,6 +209,8 @@ class Engine
         if (!is_resource($this->pipes[0])) {
             throw new \Exception('Could not start engine');
         }
+        
+        $this->sendCommand('uci');
     }
     
     /**

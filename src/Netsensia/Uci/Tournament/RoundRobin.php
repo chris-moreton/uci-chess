@@ -10,11 +10,16 @@ use Zelenin\Elo\Player;
 
 class RoundRobin extends Tournament
 { 
+    
+    const ORDER_ELO = 1;
+    const ORDER_SCORE = 2;
+    const ORDER_NAME = 3;
+    
     /**
      * {@inheritDoc}
      * @see \Netsensia\Uci\Tournament::showTable()
      */ 
-    public function showTable()
+    public function showTable($order = self::ORDER_SCORE)
     {
         $engineList = $this->engines;
         
@@ -67,11 +72,11 @@ class RoundRobin extends Tournament
         }
 
         usort($engineList, function($a, $b) {
-            if ($a['score'] == $b['score']) {
+            if ($a['engine']->getElo() == $b['engine']->getElo()) {
                 return 0;
             }
             
-            return $a['score'] > $b['score'] ? -1 : 1;
+            return $a['engine']->getElo() > $b['engine']->getElo() ? -1 : 1;
         });
 
         echo str_pad('Engine', 20);
@@ -108,6 +113,10 @@ class RoundRobin extends Tournament
     public function start()
     {
         $schedule = new Schedule(count($this->engines));
+        
+        usort($this->engines, function($a, $b) {
+            return rand(-1,1);    
+        });
 
         for ($i=0; $i<2; $i++) {
             $schedule->reset();

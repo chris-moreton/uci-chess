@@ -7,6 +7,27 @@ abstract class Tournament
 {
     protected $engines = [];
     protected $output = true;
+    
+    /**
+     * @var string
+     */
+    protected $logFile = null;
+
+    /**
+     * @return the $logFile
+     */
+    public function getLogFile()
+    {
+        return $this->logFile;
+    }
+
+    /**
+     * @param string $logFile
+     */
+    public function setLogFile($logFile)
+    {
+        $this->logFile = $logFile;
+    }
 
     /**
      * @return the $output
