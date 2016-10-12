@@ -5,7 +5,8 @@ use Netsensia\Uci\Engine;
 use Netsensia\Uci\Tournament\RoundRobin;
 use Ryanhs\Chess\Chess;
 
-$lines = file('/Users/Chris/Dropbox/Dashboard/UCITournament.csv');
+const REPORT_LOCATION = '/Users/Chris/Dropbox/Dashboard/UCITournament.csv';
+$lines = file(REPORT_LOCATION);
 
 $cuckooSettings = [];
 $rivalSettings = [];
@@ -26,7 +27,7 @@ $rivalMillisToSearch1000000Nodes = ceil($time * 1000);
 
 echo 'Milliseconds to search when timed engines are 100% = ' . $rivalMillisToSearch1000000Nodes . PHP_EOL;
 
-for ($i=2; $i<count($lines)-1; $i++) {
+for ($i=1; $i<count($lines)-1; $i++) {
     $parts = str_getcsv($lines[$i]);
     $name = $parts[0];
     $elo = $parts[1];
@@ -44,17 +45,19 @@ for ($i=2; $i<count($lines)-1; $i++) {
             $fluxSettings[] = [$millis, $elo, $name];
             break;
         case 'Rival' :
-            $rivalSettings[] = [$modeValue, $elo, $name];
+            $percent = str_replace('%', '', $modeValue);
+            $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
+            $rivalSettings[] = [$millis, $elo, $name];
             break;            
     }
 }
 
 $tournament = new RoundRobin();
 $tournament->setLogFile('log/tournament.log');
-$tournament->setResultsFile('reports/latest_results.txt');
+$tournament->setResultsFile(REPORT_LOCATION);
 
 $engine = new Engine('RivalChess.jar');
-$engine->setMode(Engine::MODE_NODES);
+$engine->setMode(Engine::MODE_TIME_MILLIS);
 $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
 $engine->setLogEngineOutput(false);
 
