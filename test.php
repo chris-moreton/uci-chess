@@ -33,12 +33,12 @@ for ($i=2; $i<count($lines)-1; $i++) {
     switch ($parts[0]) {
         case 'Cuckoo' :
             $percent = str_replace('%', '', $parts[1]);
-            $millis = ($rivalMillisToSearch1000000Nodes / 100) * $percent;
+            $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
             $cuckooSettings[] = [$millis, $parts[2], $name];
             break;
         case 'Flux' :
             $percent = str_replace('%', '', $parts[1]);
-            $millis = ($rivalMillisToSearch1000000Nodes / 100) * $percent;
+            $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
             $fluxSettings[] = [$millis, $parts[2], $name];
             break;
         case 'Rival' :
