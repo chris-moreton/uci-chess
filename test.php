@@ -5,7 +5,7 @@ use Netsensia\Uci\Engine;
 use Netsensia\Uci\Tournament\RoundRobin;
 use Ryanhs\Chess\Chess;
 
-$lines = file('reports/latest_results.txt');
+$lines = file('/Users/Chris/Dropbox/Dashboard/UCITournament.csv');
 
 $cuckooSettings = [];
 $rivalSettings = [];
@@ -27,22 +27,24 @@ $rivalMillisToSearch1000000Nodes = ceil($time * 1000);
 echo 'Milliseconds to search when timed engines are 100% = ' . $rivalMillisToSearch1000000Nodes . PHP_EOL;
 
 for ($i=2; $i<count($lines)-1; $i++) {
-    $lines[$i] = preg_replace('!\s+!', ' ', $lines[$i]);
-    $parts = explode(' ', $lines[$i]);
-    $name = $parts[0] . ' ' . $parts[1];
-    switch ($parts[0]) {
+    $parts = str_getcsv($lines[$i]);
+    $name = $parts[0];
+    $elo = $parts[1];
+    $nameSplit = explode(' ', $name);
+    $modeValue = $nameSplit[1];
+    switch ($nameSplit[0]) {
         case 'Cuckoo' :
-            $percent = str_replace('%', '', $parts[1]);
+            $percent = str_replace('%', '', $modeValue);
             $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
-            $cuckooSettings[] = [$millis, $parts[2], $name];
+            $cuckooSettings[] = [$millis, $elo, $name];
             break;
         case 'Flux' :
-            $percent = str_replace('%', '', $parts[1]);
+            $percent = str_replace('%', '', $modeValue);
             $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
-            $fluxSettings[] = [$millis, $parts[2], $name];
+            $fluxSettings[] = [$millis, $elo, $name];
             break;
         case 'Rival' :
-            $rivalSettings[] = [$parts[1], $parts[2], $name];
+            $rivalSettings[] = [$modeValue, $elo, $name];
             break;            
     }
 }
