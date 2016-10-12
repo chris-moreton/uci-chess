@@ -300,7 +300,7 @@ class Engine
      * 
      * @return string $move
      */
-    public function getMove($moveList)
+    public function getMove($moveList = null)
     {
         if (!is_resource($this->pipes[0])) {
             $this->startEngine();
@@ -315,7 +315,11 @@ class Engine
         
         $this->sendCommand('uci');
         $this->waitFor('uciok');
-        $this->sendCommand('position ' . $this->position . ' moves ' . $moveList);
+        $command = 'position ' . $this->position;
+        if ($moveList != null) {
+            $command .= ' moves ' . $moveList;
+        }
+        $this->sendCommand($command);
         $this->sendCommand('go ' . $goCommand);
         $response = $this->waitFor('bestmove');
         $parts = explode(' ', $response);

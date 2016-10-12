@@ -11,7 +11,20 @@ $cuckooSettings = [];
 $rivalSettings = [];
 $fluxSettings = [];
 
-$rivalMillisToSearch1000000Nodes = 1500;
+echo 'Determining Rival Speed...' . PHP_EOL;
+$engine = new Engine('RivalChess.jar');
+$engine->setMode(Engine::MODE_NODES);
+$engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+$engine->setLogEngineOutput(false);
+$engine->setModeValue(1000000);
+$start = microtime(true);
+$engine->getMove();
+$engine->unloadEngine();
+$time = microtime(true) - $start;
+
+$rivalMillisToSearch1000000Nodes = ceil($time * 1000);
+
+echo 'Milliseconds to search when timed engines are 100% = ' . $rivalMillisToSearch1000000Nodes . PHP_EOL;
 
 for ($i=2; $i<count($lines)-1; $i++) {
     $lines[$i] = preg_replace('!\s+!', ' ', $lines[$i]);
