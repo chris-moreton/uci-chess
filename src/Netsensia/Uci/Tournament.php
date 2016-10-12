@@ -12,6 +12,27 @@ abstract class Tournament
      * @var string
      */
     protected $logFile = null;
+    
+    /**
+     * @var string
+     */
+    protected $resultsFile = null;
+
+    /**
+     * @return the $resultsFile
+     */
+    public function getResultsFile()
+    {
+        return $this->resultsFile;
+    }
+
+    /**
+     * @param string $resultsFile
+     */
+    public function setResultsFile($resultsFile)
+    {
+        $this->resultsFile = $resultsFile;
+    }
 
     /**
      * @return the $logFile
@@ -47,7 +68,7 @@ abstract class Tournament
         $this->output = $output;
     }
 
-    abstract public function showTable();
+    abstract public function table();
     abstract public function start();
     
     /**

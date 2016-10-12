@@ -18,8 +18,10 @@ class RoundRobin extends Tournament
     /**
      * {@inheritDoc}
      * @see \Netsensia\Uci\Tournament::showTable()
+     * 
+     * @return string
      */ 
-    public function showTable($order = self::ORDER_SCORE)
+    public function table($order = self::ORDER_SCORE)
     {
         $engineList = $this->engines;
         
@@ -79,31 +81,35 @@ class RoundRobin extends Tournament
             return $a['engine']->getElo() > $b['engine']->getElo() ? -1 : 1;
         });
 
-        echo str_pad('Engine', 20);
-        echo str_pad('ELO', 6);
-        echo str_pad('W', 5);
-        echo str_pad('L', 5);
-        echo str_pad('D', 5);
-        echo str_pad('Score', 10);
-        echo PHP_EOL;
-        echo str_pad('', 47, '-');
-        echo PHP_EOL;
+        $table = '';
+        
+        $table .= str_pad('Engine', 20);
+        $table .= str_pad('ELO', 6);
+        $table .= str_pad('W', 5);
+        $table .= str_pad('L', 5);
+        $table .= str_pad('D', 5);
+        $table .= str_pad('Score', 10);
+        $table .= PHP_EOL;
+        $table .= str_pad('', 47, '-');
+        $table .= PHP_EOL;
         
         foreach ($engineList as $e) {
             
-            echo str_pad($e['engine']->getName(), 20);
-            echo str_pad(floor($e['engine']->getElo()), 6);
+            $table .= str_pad($e['engine']->getName(), 20);
+            $table .= str_pad(floor($e['engine']->getElo()), 6);
             
-            echo str_pad($e['results']['win'], 5);
-            echo str_pad($e['results']['loss'], 5);
-            echo str_pad($e['results']['draw'], 5);
-            echo str_pad($e['score'], 10);
+            $table .= str_pad($e['results']['win'], 5);
+            $table .= str_pad($e['results']['loss'], 5);
+            $table .= str_pad($e['results']['draw'], 5);
+            $table .= str_pad($e['score'], 10);
             
-            echo PHP_EOL;
+            $table .= PHP_EOL;
         }
         
-        echo str_pad('', 40, '-');
-        echo PHP_EOL . PHP_EOL;
+        $table .= str_pad('', 40, '-');
+        $table .= PHP_EOL . PHP_EOL;
+        
+        return $table;
     }
     
     /**
@@ -161,7 +167,12 @@ class RoundRobin extends Tournament
                 $this->engines[$whiteIndex]['matches'][] = $match;
                 $this->engines[$blackIndex]['matches'][] = $match;
                 
-                $this->showTable();
+                $tableString = $this->table();
+                echo $tableString;
+                
+                if ($this->resultsFile != null) {
+                    file_put_contents($this->resultsFile, $tableString);
+                }
                 
                 $pairing = $schedule->getNextPairing();
             }
