@@ -27,7 +27,7 @@ $rivalMillisToSearch1000000Nodes = ceil($time * 1000);
 
 echo 'Milliseconds to search when timed engines are 100% = ' . $rivalMillisToSearch1000000Nodes . PHP_EOL;
 
-for ($i=1; $i<count($lines)-1; $i++) {
+for ($i=1; $i<count($lines); $i++) {
     $parts = str_getcsv($lines[$i]);
     $name = $parts[0];
     $elo = $parts[1];
