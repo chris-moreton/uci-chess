@@ -80,8 +80,6 @@ Then, include the classes that you want to use, e.g.
 
 ## Run a tournament
 
-This is still a work in progress and has limited functionality, but the below code will work
-
     $tournament = new RoundRobin();
     
     $engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
@@ -105,7 +103,11 @@ This is still a work in progress and has limited functionality, but the below co
     
     $tournament->addEngine($engine);
     
-    $tournament->start();
+    foreach ($tournament->matches() as $match) {
+        echo $match->getWhite()->getName() . ' v ' . $match->getBlack()->getName() . PHP_EOL;
+        $tournament->play($match);
+        $echo $tournament->table();
+    }
     
     $tournament->showTable();
     
