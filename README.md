@@ -81,27 +81,17 @@ Then, include the classes that you want to use, e.g.
 ## Run a tournament
 
     $tournament = new RoundRobin();
-    
-    $engine = new Engine('/Users/Chris/git/chess/rival-chess-android-engine/dist/RivalChess.jar');
+ 
+    // for each engine...   
+    $engine = new Engine('/path/to/engine1.jar');
     $engine->setMode(Engine::MODE_NODES);
     $engine->setModeValue(100);
     $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     $engine->setLogEngineOutput(false);
-    $engine->setName('Rival 100');
-    
+    $engine->setName('Engine 1');
     $tournament->addEngine($engine);
     
-    $engine = clone $engine;
-    $engine->setModeValue(1000);
-    $engine->setName('Rival 1000');
-    
-    $tournament->addEngine($engine);
-    
-    $engine = clone $engine;
-    $engine->setModeValue(10000);
-    $engine->setName('Rival 10000');
-    
-    $tournament->addEngine($engine);
+    ...
     
     foreach ($tournament->matches() as $match) {
         echo $match->getWhite()->getName() . ' v ' . $match->getBlack()->getName() . PHP_EOL;
@@ -111,6 +101,5 @@ Then, include the classes that you want to use, e.g.
     
     $tournament->showTable();
     
-    // Important! - Unload the engine processes
     $tournament->close();
     
