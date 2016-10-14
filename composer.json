@@ -3,7 +3,7 @@
     "description": "Wrappers to run UCI chess engines, matches and tournaments",
     "license": "MIT",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=7.0",
         "ryanhs/chess.php": "1.0.2",
         "chris-moreton/tournament-utils": "1.0.1",
         "zelenin/elo": "dev-master"
