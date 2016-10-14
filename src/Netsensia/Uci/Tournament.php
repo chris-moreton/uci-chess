@@ -6,71 +6,10 @@ use Netsensia\Uci\Engine;
 abstract class Tournament
 {
     protected $engines = [];
-    protected $output = true;
-    
-    /**
-     * @var string
-     */
-    protected $logFile = null;
-    
-    /**
-     * @var string
-     */
-    protected $resultsFile = null;
-
-    /**
-     * @return the $resultsFile
-     */
-    public function getResultsFile()
-    {
-        return $this->resultsFile;
-    }
-
-    /**
-     * @param string $resultsFile
-     */
-    public function setResultsFile($resultsFile)
-    {
-        $this->resultsFile = $resultsFile;
-    }
-
-    /**
-     * @return the $logFile
-     */
-    public function getLogFile()
-    {
-        return $this->logFile;
-    }
-
-    /**
-     * @param string $logFile
-     */
-    public function setLogFile($logFile)
-    {
-        $this->logFile = $logFile;
-    }
-
-    /**
-     * @return the $output
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
-     * Should the tournament output info to the console?
-     * 
-     * @param boolean $output
-     */
-    public function setOutput($output)
-    {
-        $this->output = $output;
-    }
 
     abstract public function table();
-    abstract public function start();
-    
+    abstract public function matches();
+
     /**
      * @param Engine $engine
      */

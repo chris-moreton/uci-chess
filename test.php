@@ -12,18 +12,23 @@ $cuckooSettings = [];
 $rivalSettings = [];
 $fluxSettings = [];
 
-echo 'Determining Rival Speed...' . PHP_EOL;
-$engine = new Engine('RivalChess.jar');
-$engine->setMode(Engine::MODE_NODES);
-$engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
-$engine->setLogEngineOutput(false);
-$engine->setModeValue(1000000);
-$start = microtime(true);
-$engine->getMove();
-$engine->unloadEngine();
-$time = microtime(true) - $start;
+function determineRivalSpeed()
+{
+    echo 'Determining Rival Speed...' . PHP_EOL;
+    $engine = new Engine('RivalChess.jar');
+    $engine->setMode(Engine::MODE_NODES);
+    $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+    $engine->setLogEngineOutput(false);
+    $engine->setModeValue(1000000);
+    $start = microtime(true);
+    $engine->getMove();
+    $engine->unloadEngine();
+    $time = microtime(true) - $start;
+    
+    return ceil($time * 1000);
+}
 
-$rivalMillisToSearch1000000Nodes = ceil($time * 1000);
+$rivalMillisToSearch1000000Nodes = determineRivalSpeed();
 
 echo 'Milliseconds to search when timed engines are 100% = ' . $rivalMillisToSearch1000000Nodes . PHP_EOL;
 
@@ -53,8 +58,6 @@ for ($i=1; $i<count($lines); $i++) {
 }
 
 $tournament = new RoundRobin();
-$tournament->setLogFile('log/tournament.log');
-$tournament->setResultsFile(REPORT_LOCATION);
 
 $engine = new Engine('RivalChess.jar');
 $engine->setMode(Engine::MODE_TIME_MILLIS);
@@ -97,7 +100,21 @@ foreach ($fluxSettings as $setting) {
     $engine = clone $engine;
 }
 
-$tournament->start();
+foreach ($tournament->matches() as $match) {
+    
+    echo $match->getWhite()->getName() . ' v ' . $match->getBlack()->getName() . PHP_EOL;
+    
+    $tournament->play($match);
+    
+    $tableString = $tournament->table();
+    
+    $rivalSpeed = determineRivalSpeed();
+    
+    $tableString = str_replace('Engine,', 'Engine (100%=' . $rivalSpeed . 'ms),', $tableString);
+    echo $tableString;
+    
+    file_put_contents(REPORT_LOCATION, $tableString);
+}
 
 $tournament->close();
 

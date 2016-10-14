@@ -100,10 +100,43 @@ class RoundRobin extends Tournament
     }
     
     /**
+     * Play the given match
+     * 
+     * @param Match $match
+     * @return \Netsensia\Uci\string[]
+     */
+    public function play(Match $match)
+    {
+        $result = $match->play();
+        
+        $whiteEngine = $match->getWhite();
+        $blackEngine = $match->getBlack();
+        
+        $eloWhite = new Player($whiteEngine->getElo());
+        $eloBlack = new Player($blackEngine->getElo());
+        $eloMatch = new \Zelenin\Elo\Match($eloWhite, $eloBlack);
+        
+        if ($result['result'] == Match::DRAW) {
+            $eloMatch->setScore(0.5, 0.5)->setK(32)->count();
+        } else {
+            $eloMatch->setScore($result['result'] == Match::WHITE_WIN ? 1 : 0, $result['result'] == Match::BLACK_WIN ? 1 : 0)->setK(32)->count();
+        }
+        
+        if (strpos($whiteEngine->getName(), 'No Adjust') === false) {
+            $whiteEngine->setElo($eloMatch->getPlayer1()->getRating());
+        }
+        if (strpos($blackEngine->getName(), 'No Adjust') === false) {
+            $blackEngine->setElo($eloMatch->getPlayer2()->getRating());
+        }
+        
+        return $result;
+    }
+    
+    /**
      * {@inheritDoc}
      * @see \Netsensia\Uci\Tournament::start()
      */
-    public function start()
+    public function matches()
     {
         $schedule = new Schedule(count($this->engines));
         
@@ -123,46 +156,12 @@ class RoundRobin extends Tournament
                 $whiteEngine = $this->engines[$whiteIndex];
                 $blackEngine = $this->engines[$blackIndex];
                 
-                if ($this->output) {
-                    echo $whiteEngine['engine']->getName() . ' v ' . $blackEngine['engine']->getName() . PHP_EOL;
-                }
-                
                 $match = new Match($whiteEngine['engine'], $blackEngine['engine']);
-                $result = $match->play();
-                
-                if ($this->output) {
-                    echo $result['reason'] . PHP_EOL;
-                }
-                
-                $eloWhite = new Player($whiteEngine['engine']->getElo());
-                $eloBlack = new Player($blackEngine['engine']->getElo());
-                $eloMatch = new \Zelenin\Elo\Match($eloWhite, $eloBlack);
-                
-                if ($result['result'] == Match::DRAW) {
-                    $eloMatch->setScore(0.5, 0.5)->setK(32)->count();
-                } else {
-                    $eloMatch->setScore($result['result'] == Match::WHITE_WIN ? 1 : 0, $result['result'] == Match::BLACK_WIN ? 1 : 0)->setK(32)->count();
-                }
-                
-                if (strpos($whiteEngine['engine']->getName(), 'No Adjust') === false) {
-                    $whiteEngine['engine']->setElo($eloMatch->getPlayer1()->getRating());
-                }
-                if (strpos($blackEngine['engine']->getName(), 'No Adjust') === false) {
-                    $blackEngine['engine']->setElo($eloMatch->getPlayer2()->getRating());
-                }
                 
                 $this->engines[$whiteIndex]['matches'][] = $match;
                 $this->engines[$blackIndex]['matches'][] = $match;
                 
-                $tableString = $this->table();
-                
-                if ($this->output) {
-                    echo $tableString;
-                }
-                
-                if ($this->resultsFile != null) {
-                    file_put_contents($this->resultsFile, $tableString);
-                }
+                yield $match;
                 
                 $pairing = $schedule->getNextPairing();
             }

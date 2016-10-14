@@ -56,7 +56,7 @@ class Match
     }
 
     /**
-     * @return the $white
+     * @return Engine $white
      */
     public function getWhite()
     {
@@ -64,7 +64,7 @@ class Match
     }
 
     /**
-     * @return the $black
+     * @return Engine $black
      */
     public function getBlack()
     {
