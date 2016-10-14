@@ -123,8 +123,8 @@ function determineRivalSpeed()
     $engine->setModeValue(1000000);
     $start = microtime(true);
     $engine->getMove();
-    $engine->unloadEngine();
     $time = microtime(true) - $start;
+    $engine->unloadEngine();
 
     return ceil($time * 1000);
 }
