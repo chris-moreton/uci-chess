@@ -5,3 +5,6 @@
 log/
 vendor/
 .DS_Store
+aws.json
+
+

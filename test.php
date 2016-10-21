@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * A test script that sets up a round robin tournament with three engines configured at
+ * multiple perecent strengths. Runs the tournament an infinite number of times, saving
+ * the current ELO of each engine in a file after each match.
+ */
+
 include 'vendor/autoload.php';
 
 use Netsensia\Uci\Engine;
