@@ -50,8 +50,9 @@ function run()
                 break;
             case 'Rival' :
                 $percent = str_replace('%', '', $modeValue);
-                $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
-                $rivalSettings[] = [$millis, $elo, $name];
+                $nodes = 10000 * $percent;
+                echo $name . ' will search ' . $nodes . ' nodes' . PHP_EOL;
+                $rivalSettings[] = [$nodes, $elo, $name];
                 break;            
         }
     }
@@ -59,7 +60,7 @@ function run()
     $tournament = new RoundRobin();
     
     $engine = new Engine('RivalChess.jar');
-    $engine->setMode(Engine::MODE_TIME_MILLIS);
+    $engine->setMode(Engine::MODE_NODES);
     $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     $engine->setLogEngineOutput(false);
     

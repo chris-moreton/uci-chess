@@ -3,42 +3,64 @@ include 'vendor/autoload.php';
 
 use Aws\Sdk;
 
+const REPORT_LOCATION = '/Users/Chris/Dropbox/Dashboard/UCITournament.csv';
+
 $params = json_decode(file_get_contents('aws.json'), true);
 
 $sdk = new Sdk($params);
 
 $client = $sdk->createDynamoDb();
 
-$result = $client->createTable([
-    'TableName' => 'UciEngine',
-    'AttributeDefinitions' => [
-        [ 'AttributeName' => 'EngineId', 'AttributeType' => 'S' ]
-    ],
-    'KeySchema' => [
-        [ 'AttributeName' => 'EngineId', 'KeyType' => 'HASH' ]
-    ],
-    'ProvisionedThroughput' => [
-        'ReadCapacityUnits'    => 5,
-        'WriteCapacityUnits' => 6
-    ]
-]);
+$createTable = true;
 
-$client->waitUntil('TableExists', [
-    'TableName' => 'UciEngine',
-    '@waiter' => [
-        'delay'       => 5,
-        'maxAttempts' => 20
-    ]
-]);
+$tableName = 'UciEngine';
 
-$engineName = 'Adsasdasd';
-$result = $client->putItem(array(
-    'TableName' => 'UciEngine',
-    'Item' => array(
-        'EngineId' => ['S' => sha1($engineName)],
-        'Elo'    => array('N' => "123"),
-    )
-));
+if ($createTable) {
+    $result = $client->createTable([
+        'TableName' => $tableName,
+        'AttributeDefinitions' => [
+            [ 'AttributeName' => 'Id', 'AttributeType' => 'S' ]
+        ],
+        'KeySchema' => [
+            [ 'AttributeName' => 'Id', 'KeyType' => 'HASH' ]
+        ],
+        'ProvisionedThroughput' => [
+            'ReadCapacityUnits'    => 5,
+            'WriteCapacityUnits' => 6
+        ]
+    ]);
+    
+    $client->waitUntil('TableExists', [
+        'TableName' => $tableName,
+        '@waiter' => [
+            'delay'       => 5,
+            'maxAttempts' => 20
+        ]
+    ]);
+    
+    $lines = file(REPORT_LOCATION);
+    
+    for ($i=1; $i<count($lines); $i++) {
+        $parts = str_getcsv($lines[$i]);
+        
+        $result = $client->putItem(array(
+            'TableName' => $tableName,
+            'Item' => array(
+                'Id' => ['S' => sha1($parts[0])],
+                'Name'    => array('S' => $parts[0]),
+                'Elo'    => array('N' => $parts[1]),
+                'Won'    => array('N' => "0"),
+                'Lost'    => array('N' => "0"),
+                'Drawn'    => array('N' => "0"),
+                'IllegalMoves'    => array('N' => "0")
+            )
+        ));
+        
+        
+    }
+}
+
+
 
 // $credentials = parse_ini_file('.server.aws');
 
