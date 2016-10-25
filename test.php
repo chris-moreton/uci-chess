@@ -144,7 +144,7 @@ function run()
 function determineRivalSpeed()
 {
     echo 'Determining Rival Speed...' . PHP_EOL;
-    $engine = new Engine('RivalChess.jar');
+    $engine = new Engine('engines/RivalChess.jar');
     $engine->setMode(Engine::MODE_NODES);
     $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     $engine->setLogEngineOutput(false);
