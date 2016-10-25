@@ -203,7 +203,7 @@ class Engine
         }
         
         $command .= $this->engineLocation;
-        
+
         $this->process = proc_open($command, $descriptorspec, $this->pipes);
         
         if (!is_resource($this->pipes[0])) {

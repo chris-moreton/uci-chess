@@ -1,0 +1,5 @@
+Engine (3458ms),ELO,W,L,D,Score
+cuckoo112.jar,2913,45,1,2,46
+Flux-2.2.1.jar,2578,40,2,6,43
+RivalChess.jar,2383,36,10,3,37.5
+DeepBrutePos-2.1.jar --io-mode uci,2200,36,10,3,37.5

@@ -28,6 +28,7 @@ function run()
     $cuckooSettings = [];
     $rivalSettings = [];
     $fluxSettings = [];
+    $deepBrutePosSettings = [];
     
     $lines = file(REPORT_LOCATION);
     
@@ -38,6 +39,11 @@ function run()
         $nameSplit = explode(' ', $name);
         $modeValue = $nameSplit[1];
         switch ($nameSplit[0]) {
+            case 'DeepBrutePos' :
+                $percent = str_replace('%', '', $modeValue);
+                $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
+                $deepBrutePosSettings[] = [$millis, $elo, $name];
+                break;
             case 'Cuckoo' :
                 $percent = str_replace('%', '', $modeValue);
                 $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
@@ -59,7 +65,7 @@ function run()
     
     $tournament = new RoundRobin();
     
-    $engine = new Engine('RivalChess.jar');
+    $engine = new Engine('engines/RivalChess.jar');
     $engine->setMode(Engine::MODE_NODES);
     $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     $engine->setLogEngineOutput(false);
@@ -72,7 +78,7 @@ function run()
         $engine = clone $engine;
     }
     
-    $engine = new Engine('cuckoo112.jar uci');
+    $engine = new Engine('engines/cuckoo112.jar uci');
     $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     $engine->setMode(Engine::MODE_TIME_MILLIS);
     $engine->setName('Cuckoo');
@@ -86,13 +92,27 @@ function run()
         $engine = clone $engine;
     }
     
-    $engine = new Engine('-Xmx1024M -jar Flux-2.2.1.jar');
+    $engine = new Engine('-Xmx1024M engines/Flux-2.2.1.jar');
     $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
     $engine->setMode(Engine::MODE_TIME_MILLIS);
     $engine->setName('Cuckoo');
     $engine->setLogEngineOutput(false);
     
     foreach ($fluxSettings as $setting) {
+        $engine->setModeValue($setting[0]);
+        $engine->setElo($setting[1]);
+        $engine->setName($setting[2]);
+        $tournament->addEngine($engine);
+        $engine = clone $engine;
+    }
+    
+    $engine = new Engine('engines/DeepBrutePos-2.1.jar');
+    $engine->setApplicationType(Engine::APPLICATION_TYPE_JAR);
+    $engine->setMode(Engine::MODE_TIME_MILLIS);
+    $engine->setName('Deep Brute Pos');
+    $engine->setLogEngineOutput(false);
+    
+    foreach ($deepBrutePosSettings as $setting) {
         $engine->setModeValue($setting[0]);
         $engine->setElo($setting[1]);
         $engine->setName($setting[2]);
