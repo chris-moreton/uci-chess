@@ -1,30 +1,74 @@
 <?php
 namespace Netsensia\Uci;
 
+use Aws\Sdk;
+
 class Server
 {
-    private $awsKey;
-    private $awsSecret;
+    const TABLE_NAME = 'UciEngine';
     
-    public function __construct()
+    private $params;
+    
+    /**
+     * 
+     * @param array $params 
+     *      ['version' => '', 
+     *       'region' => '', 
+     *       'credentials' => 
+     *          ['key' => '', 
+     *           'secret' => ''
+     *          ]
+     *      ]
+     */
+    public function __construct($params)
     {
-        if (!file_exists('.server.aws')) {
-            throw new \Exception('AWS server credentials file ".server.aws." not found');
+        $this->params = $params;
+        $this->createTable();
+    }
+    
+    private function createTable()
+    {
+        $sdk = new Sdk($this->params);
+        
+        $client = $sdk->createDynamoDb();
+        
+        $result = $client->listTables();
+        
+        foreach ($result['TableNames'] as $tableName) {
+            if ($tableName == self::TABLE_NAME) {
+                echo 'Table UciEngine already exists' . PHP_EOL;
+                // table already exists
+                return;
+            }
         }
+
+        echo 'Creating table UciEngine' . PHP_EOL;
         
-        $credentials = file('.server.aws');
-        
-        if (count($credentials) < 2) {
-            throw new \Exception('Invalid content in ".server.aws"');
-        }
-        
-        $this->awsKey = $credentials[0];
-        $this->awsSecret = $credentials[1];
+        $result = $client->createTable([
+            'TableName' => self::TABLE_NAME,
+            'AttributeDefinitions' => [
+                [ 'AttributeName' => 'Id', 'AttributeType' => 'S' ]
+            ],
+            'KeySchema' => [
+                [ 'AttributeName' => 'Id', 'KeyType' => 'HASH' ]
+            ],
+            'ProvisionedThroughput' => [
+                'ReadCapacityUnits'    => 5,
+                'WriteCapacityUnits' => 6
+            ]
+        ]);
+    
+        $client->waitUntil('TableExists', [
+            'TableName' => self::TABLE_NAME,
+            '@waiter' => [
+                'delay'       => 5,
+                'maxAttempts' => 20
+            ]
+        ]);
     }
     
     public function run()
     {
-        
     }
 }
 
