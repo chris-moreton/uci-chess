@@ -43,11 +43,13 @@ if ($createTable) {
     for ($i=1; $i<count($lines); $i++) {
         $parts = str_getcsv($lines[$i]);
         
+        $nameParts = explode(' ', $parts[0]);
         $result = $client->putItem(array(
             'TableName' => $tableName,
             'Item' => array(
                 'Id' => ['S' => sha1($parts[0])],
-                'Name'    => array('S' => $parts[0]),
+                'Name'    => array('S' => $nameParts[0]),
+                'StrengthPercent' => array('N' => str_replace('%', '', $nameParts[1])),
                 'Elo'    => array('N' => $parts[1]),
                 'Won'    => array('N' => "0"),
                 'Lost'    => array('N' => "0"),
