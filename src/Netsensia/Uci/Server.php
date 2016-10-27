@@ -2,12 +2,19 @@
 namespace Netsensia\Uci;
 
 use Aws\Sdk;
+use Netsensia\Tournament\RoundRobin\Schedule;
 
 class Server
 {
     const TABLE_NAME = 'UciEngine';
     
     private $params;
+    
+    private $sdk;
+    
+    private $queueUrl;
+    
+    private $engines;
     
     /**
      * 
@@ -23,14 +30,20 @@ class Server
     public function __construct($params)
     {
         $this->params = $params;
+        $this->sdk = new Sdk($this->params);
         $this->createTable();
+        $this->populateEngineList();
+        $this->queueUrl = $this->getQueueUrl();
+    }
+    
+    private function populateEngineList()
+    {
+        
     }
     
     private function createTable()
     {
-        $sdk = new Sdk($this->params);
-        
-        $client = $sdk->createDynamoDb();
+        $client = $this->sdk->createDynamoDb();
         
         $result = $client->listTables();
         
@@ -67,8 +80,46 @@ class Server
         ]);
     }
     
+    private function getQueueUrl()
+    {
+        $client = $this->sdk->createSqs();
+        
+        $result = $client->createQueue(array('QueueName' => 'uci-tournament'));
+        $queueUrl = $result->get('QueueUrl');
+        return $queueUrl;
+    }
+    
     public function run()
     {
+        $schedule = new Schedule(count($this->engines));
+        $client = $this->sdk->createSqs();
+        
+        usort($this->engines, function($a, $b) {
+            return rand(-1,1);
+        });
+        
+        for ($i=0; $i<2; $i++) {
+            $schedule->reset();
+            $pairing = $schedule->getNextPairing();
+            while ($pairing !== null) {
+    
+                // looks complex, but just assigns white and black depending on which iteration we are on
+                $whiteIndex = $pairing[$i % 2] - 1;
+                $blackIndex = $pairing[abs(($i % 2) - 1)] - 1;
+                
+                $client->sendMessage(array(
+                    'QueueUrl'    => $this->queueUrl,
+                    'MessageBody' => [
+                        'white' => $this->engines[$whiteIndex],
+                        'black' => $this->engines[$blackIndex],
+                    ],
+                ));
+    
+                $pairing = $schedule->getNextPairing();
+            }
+        }
+
+        $tournament->close();
     }
 }
 
