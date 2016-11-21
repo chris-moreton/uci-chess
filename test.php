@@ -12,13 +12,10 @@ use Netsensia\Uci\Engine;
 use Netsensia\Uci\Tournament\RoundRobin;
 use Ryanhs\Chess\Chess;
 
-const REPORT_LOCATION = '/Users/Chris/Dropbox/Dashboard/UCITournament.csv';
+const REPORT_LOCATION = '/Volumes/Secomba/chris/Boxcryptor/Dropbox/Dashboard/UCITournament.csv';
 
 $count = 0;
-while (true) {
-    echo "TOURNAMENT " . ++$count . PHP_EOL;
-    run();
-}
+run();
 
 function run()
 {
@@ -29,8 +26,13 @@ function run()
     $rivalSettings = [];
     $fluxSettings = [];
     $deepBrutePosSettings = [];
+    $deepJuniorSettings = [];
     
     $lines = file(REPORT_LOCATION);
+    
+    if (!$lines) {
+        die;
+    }
     
     for ($i=1; $i<count($lines); $i++) {
         $parts = str_getcsv($lines[$i]);
@@ -39,6 +41,12 @@ function run()
         $nameSplit = explode(' ', $name);
         $modeValue = $nameSplit[1];
         switch ($nameSplit[0]) {
+            case 'DeepJunior' :
+                $percent = 100;
+                $millis = $rivalMillisToSearch1000000Nodes;
+                $restrictToElo = $modeValue;
+                $deepJuniorSettings[] = [$millis, $elo, $name, $restrictToElo];
+                break;
             case 'DeepBrutePos' :
                 $percent = str_replace('%', '', $modeValue);
                 $millis = ceil(($rivalMillisToSearch1000000Nodes / 100) * $percent);
@@ -64,6 +72,7 @@ function run()
     }
     
     $tournament = new RoundRobin();
+    $tournament->setNumberOfRuns(100);
     
     $engine = new Engine('engines/RivalChess.jar');
     $engine->setMode(Engine::MODE_NODES);
@@ -116,6 +125,21 @@ function run()
         $engine->setModeValue($setting[0]);
         $engine->setElo($setting[1]);
         $engine->setName($setting[2]);
+        $tournament->addEngine($engine);
+        $engine = clone $engine;
+    }
+    
+    $engine = new Engine('/Applications/Deep\ Junior\ Yokohama/Deep\ Junior\ Yokohama');
+    $engine->setApplicationType(Engine::APPLICATION_TYPE_APP);
+    $engine->setMode(Engine::MODE_TIME_MILLIS);
+    $engine->setName('Deep Junior');
+    $engine->setLogEngineOutput(false);
+    
+    foreach ($deepJuniorSettings as $setting) {
+        $engine->setModeValue($setting[0]);
+        $engine->setElo($setting[1]);
+        $engine->setName($setting[2]);
+        $engine->setRestrictToElo($setting[3]);
         $tournament->addEngine($engine);
         $engine = clone $engine;
     }

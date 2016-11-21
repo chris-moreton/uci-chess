@@ -6,9 +6,26 @@ use Netsensia\Uci\Engine;
 abstract class Tournament
 {
     protected $engines = [];
+    protected $numberOfRuns = 1;
 
     abstract public function table();
     abstract public function matches();
+    
+    /**
+     * @return member variable $numberOfRuns
+     */
+    public function getNumberOfRuns()
+    {
+        return $this->numberOfRuns;
+    }
+
+    /**
+     * @param number $numberOfRuns
+     */
+    public function setNumberOfRuns($numberOfRuns)
+    {
+        $this->numberOfRuns = $numberOfRuns;
+    }
 
     /**
      * @param Engine $engine

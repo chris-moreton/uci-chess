@@ -144,7 +144,7 @@ class RoundRobin extends Tournament
             return rand(-1,1);    
         });
 
-        for ($i=0; $i<2; $i++) {
+        for ($i=0; $i<($this->numberOfRuns * 2); $i++) {
             $schedule->reset();
             $pairing = $schedule->getNextPairing();
             while ($pairing !== null) {

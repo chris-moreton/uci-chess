@@ -34,6 +34,41 @@ class Engine
     
     private $elo = 1600;
     
+    private $restrictToElo = null;
+    private $maxThreads = null;
+    
+    /**
+     * @return member variable $maxThreads
+     */
+    public function getMaxThreads()
+    {
+        return $this->maxThreads;
+    }
+
+    /**
+     * @param field_type $maxThreads
+     */
+    public function setMaxThreads($maxThreads)
+    {
+        $this->maxThreads = $maxThreads;
+    }
+
+    /**
+     * @return member variable $restrictToElo
+     */
+    public function getRestrictToElo()
+    {
+        return $this->restrictToElo;
+    }
+
+    /**
+     * @param field_type $restrictToElo
+     */
+    public function setRestrictToElo($restrictToElo)
+    {
+        $this->restrictToElo = $restrictToElo;
+    }
+
     /**
      * @return the $elo
      */
@@ -315,6 +350,16 @@ class Engine
         
         $this->sendCommand('uci');
         $this->waitFor('uciok');
+        
+        if ($this->restrictToElo) {
+            $this->sendCommand('setoption name UCI_LimitStrength value true');
+            $this->sendCommand('setoption name UCI_Elo value ' . $this->restrictToElo);
+        }
+        
+        if ($this->maxThreads) {
+            $this->sendCommand('setoption name Threads value ' . $this->maxThreads);
+        }
+        
         $command = 'position ' . $this->position;
         if ($moveList != null) {
             $command .= ' moves ' . $moveList;
