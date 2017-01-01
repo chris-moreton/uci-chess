@@ -4,7 +4,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.0",
-        "ryanhs/chess.php": "1.0.2",
+        "ryanhs/chess.php": "1.0.1",
         "chris-moreton/tournament-utils": "1.0.1",
         "zelenin/elo": "dev-master",
         "aws/aws-sdk-php": "^3.19"
